@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Vasco AI Learning Platform</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+</head>
+<body>
+
+  <!-- NAVIGATION -->
+  <nav class="navbar">
+    <div class="logo"><i class="fas fa-graduation-cap"></i> Vasco Learning</div>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="dashboard.html">Dashboard</a></li>
+      <li id="nav-user-name" style="color:#fff;font-weight:600;font-size:.85rem;display:none;">
+        <i class="fas fa-user-circle"></i> <span id="nav-name-text"></span>
+      </li>
+      <li>
+        <button id="nav-logout-btn" onclick="vascoLogout()"
+          style="display:none;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);
+          color:#fff;padding:.35rem .85rem;border-radius:8px;cursor:pointer;font-size:.82rem;
+          font-family:'Segoe UI',system-ui,sans-serif;font-weight:600;">
+          <i class="fas fa-sign-out-alt"></i> Logout
+        </button>
+      </li>
+    </ul>
+  </nav>
+
+  <!-- HERO SECTION -->
+  <section class="hero">
+    <h1>Learn Real Skills. Get Certified.</h1>
+    <p>Master business, digital skills, communication and income generation — step by step.</p>
+    <a href="#courses" class="btn-primary"><i class="fas fa-arrow-right"></i> Explore Courses</a>
+  </section>
+
+  <!-- MAIN CONTENT (home view + course view render here) -->
+  <div id="main-content">
+
+    <!-- COURSES SECTION -->
+    <section class="courses" id="courses">
+      <h2>Our Courses</h2>
+      <p class="section-sub">Choose a course and start building real-world skills today.</p>
+      <div class="course-grid" id="course-grid">
+
+        <div class="course-card">
+          <div class="course-icon-wrap blue"><i class="fas fa-store"></i></div>
+          <h3>Starting a Small Business</h3>
+          <p>Learn how to start, run and grow a small business from scratch.</p>
+          <span class="level-badge"><i class="fas fa-signal"></i> Beginner → Advanced</span>
+          <button class="btn-secondary" onclick="openCourse('small-business')">
+            <i class="fas fa-play"></i> Start Learning
+          </button>
+        </div>
+
+        <div class="course-card">
+          <div class="course-icon-wrap green"><i class="fas fa-laptop-code"></i></div>
+          <h3>Digital Skills & Productivity</h3>
+          <p>Master essential digital tools used in modern workplaces.</p>
+          <span class="level-badge"><i class="fas fa-signal"></i> Beginner → Advanced</span>
+          <button class="btn-secondary" onclick="openCourse('digital-skills')">
+            <i class="fas fa-play"></i> Start Learning
+          </button>
+        </div>
+
+        <div class="course-card">
+          <div class="course-icon-wrap purple"><i class="fas fa-comments"></i></div>
+          <h3>Communication & Influence Skills</h3>
+          <p>Build confidence, speak clearly and influence others positively.</p>
+          <span class="level-badge"><i class="fas fa-signal"></i> Beginner → Advanced</span>
+          <button class="btn-secondary" onclick="openCourse('communication')">
+            <i class="fas fa-play"></i> Start Learning
+          </button>
+        </div>
+
+        <div class="course-card">
+          <div class="course-icon-wrap orange"><i class="fas fa-coins"></i></div>
+          <h3>Digital Income & Opportunity Skills</h3>
+          <p>Discover how to earn income online using your skills.</p>
+          <span class="level-badge"><i class="fas fa-signal"></i> Beginner → Advanced</span>
+          <button class="btn-secondary" onclick="openCourse('digital-income')">
+            <i class="fas fa-play"></i> Start Learning
+          </button>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- HOW IT WORKS -->
+    <section class="how-it-works">
+      <h2>How It Works</h2>
+      <p class="section-sub">Four simple steps from learning to certification.</p>
+      <div class="steps-grid">
+        <div class="step">
+          <div class="step-number">1</div>
+          <i class="fas fa-user-plus"></i>
+          <h4>Register with Gmail</h4>
+          <p>Create your free account using your Gmail to track your progress.</p>
+        </div>
+        <div class="step">
+          <div class="step-number">2</div>
+          <i class="fas fa-book-open"></i>
+          <h4>Complete Lessons</h4>
+          <p>Go through each lesson with the help of Vasco AI Tutor.</p>
+        </div>
+        <div class="step">
+          <div class="step-number">3</div>
+          <i class="fas fa-clipboard-check"></i>
+          <h4>Pass the Test</h4>
+          <p>Score 80% or more on the final test to qualify for certification.</p>
+        </div>
+        <div class="step">
+          <div class="step-number">4</div>
+          <i class="fas fa-certificate"></i>
+          <h4>Get Certified</h4>
+          <p>Pay $5 via Mobile Money and receive your certificate via WhatsApp.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ABOUT THE BUILDER -->
+    <section class="about-builder">
+      <div class="about-inner">
+
+       <div class="about-photo-placeholder">
+  <img src="images/varvee.jpg" alt="Varvee M. Kamara"/>
+</div>
+        </div>
+
+        <div class="about-content">
+          <p class="about-label">Meet the Creator</p>
+          <h2 class="about-name">Varvee M. Kamara</h2>
+          <p class="about-role">Entrepreneur &middot; Educator &middot; Web Developer</p>
+          <p class="about-bio">
+            Founder of <a href="https://www.facebook.com/vasco.encyclopedia.7" target="_blank">Vasco Business Connect Hub</a>
+            — passionate about empowering Liberian communities through education and technology.
+          </p>
+          <div class="about-skills-grid">
+            <span class="skill-tag"><i class="fas fa-chalkboard-teacher"></i> Teaching</span>
+            <span class="skill-tag"><i class="fas fa-code"></i> Web Dev</span>
+            <span class="skill-tag"><i class="fas fa-bullhorn"></i> Digital Marketing</span>
+            <span class="skill-tag"><i class="fas fa-pen-nib"></i> Content Creation</span>
+            <span class="skill-tag"><i class="fas fa-microphone"></i> Public Speaking</span>
+            <span class="skill-tag"><i class="fas fa-store"></i> Business</span>
+          </div>
+          <div class="about-contact-links">
+            <a href="https://wa.me/231888359707" target="_blank" class="contact-link whatsapp"><i class="fab fa-whatsapp"></i> WhatsApp</a>
+            <a href="mailto:varveemkamara@gmail.com" class="contact-link email"><i class="fas fa-envelope"></i> Email</a>
+            <a href="https://www.facebook.com/vasco.encyclopedia.7" target="_blank" class="contact-link facebook"><i class="fab fa-facebook"></i> Facebook</a>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+      <p>© 2025 Vasco AI Learning Platform. Built by Varvee M. Kamara. All rights reserved.</p>
+      <p>Need help? <a href="https://wa.me/231777339716" target="_blank"><i class="fab fa-whatsapp"></i> Contact us on WhatsApp</a></p>
+    </footer>
+
+  </div><!-- /#main-content -->
+
+  <!-- SCRIPTS — order matters -->
+  <script src="js/data.js"></script>
+  <script src="js/progress.js"></script>
+  <script src="js/lessons.js"></script>
+  <script src="js/tests.js"></script>
+  <script src="js/ai-tutor.js"></script>
+
+  <!-- Auth & Firebase session -->
+  <script type="module">
+    import { initializeApp }     from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import { getFirestore, doc, getDoc, updateDoc }
+      from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey           : "AIzaSyBpToJyYHbcbfWR6hT6HBRo6Sj8iQQgPQA",
+      authDomain       : "vasco-platform.firebaseapp.com",
+      projectId        : "vasco-platform",
+      storageBucket    : "vasco-platform.firebasestorage.app",
+      messagingSenderId: "995549874685",
+      appId            : "1:995549874685:web:0747c6f0af5323f448f194"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db  = getFirestore(app);
+
+    /* ── Check session ── */
+    const raw  = sessionStorage.getItem('vasco_user');
+    const user = raw ? JSON.parse(raw) : null;
+
+    if (!user) {
+      window.location.href = 'login.html';
+    } else {
+      // Show name in navbar
+      document.getElementById('nav-name-text').textContent = user.name;
+      document.getElementById('nav-user-name').style.display = 'list-item';
+      document.getElementById('nav-logout-btn').style.display = 'list-item';
+
+      // Load progress from Firebase into localStorage
+      try {
+        const snap = await getDoc(doc(db, 'users', user.email));
+        if (snap.exists()) {
+          const data = snap.data();
+          if (data.progress) {
+            Object.entries(data.progress).forEach(([k, v]) => {
+              localStorage.setItem(k, JSON.stringify(v));
+            });
+          }
+          if (data.tests) {
+            Object.entries(data.tests).forEach(([k, v]) => {
+              localStorage.setItem(k, JSON.stringify(v));
+            });
+          }
+        }
+      } catch (e) {
+        console.warn('[vasco] Could not load Firebase progress:', e);
+      }
+
+      /* ── Sync progress to Firebase on every save ── */
+      window._vascoFirebaseDB   = db;
+      window._vascoFirebaseUser = user;
+    }
+
+    /* ── Logout ── */
+    window.vascoLogout = function() {
+      sessionStorage.removeItem('vasco_user');
+      window.location.href = 'login.html';
+    };
+  </script>
+
+</body>
+</html>

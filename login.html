@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Login — Vasco AI Learning Platform</title>
+  <link rel="stylesheet" href="css/style.css"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <style>
+    body { background: #f0f4f8; display: flex; flex-direction: column; min-height: 100vh; }
+
+    .auth-wrapper {
+      flex: 1; display: flex; align-items: center;
+      justify-content: center; padding: 2rem 1rem;
+    }
+
+    .auth-card {
+      background: #fff; border-radius: 18px;
+      box-shadow: 0 8px 40px rgba(0,0,0,0.12);
+      width: 100%; max-width: 440px;
+      overflow: hidden; animation: auth-in .35s ease;
+    }
+    @keyframes auth-in {
+      from { opacity: 0; transform: translateY(18px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .auth-header {
+      background: linear-gradient(135deg, #1a73e8, #0d9488);
+      padding: 2rem 2rem 1.75rem;
+      text-align: center;
+    }
+    .auth-header .auth-logo {
+      width: 60px; height: 60px; border-radius: 50%;
+      background: rgba(255,255,255,.2);
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 1rem;
+      font-size: 1.6rem; color: #fff;
+    }
+    .auth-header h1 {
+      color: #fff; font-size: 1.35rem;
+      font-weight: 800; margin-bottom: .3rem;
+    }
+    .auth-header p { color: rgba(255,255,255,.8); font-size: .85rem; }
+
+    .auth-tabs {
+      display: flex; border-bottom: 1px solid #e2e8f0;
+    }
+    .auth-tab {
+      flex: 1; padding: .9rem;
+      background: none; border: none;
+      font-size: .9rem; font-weight: 600;
+      color: #64748b; cursor: pointer;
+      border-bottom: 3px solid transparent;
+      transition: all .2s;
+      font-family: 'Segoe UI', system-ui, sans-serif;
+    }
+    .auth-tab.active {
+      color: #1a73e8;
+      border-bottom-color: #1a73e8;
+      background: #f8faff;
+    }
+
+    .auth-body { padding: 1.75rem 2rem 2rem; }
+
+    .auth-panel { display: none; }
+    .auth-panel.active { display: block; }
+
+    .form-group { margin-bottom: 1.1rem; }
+    .form-group label {
+      display: block; font-size: .8rem;
+      font-weight: 600; color: #374151;
+      margin-bottom: .4rem;
+      font-family: 'Segoe UI', system-ui, sans-serif;
+    }
+    .form-group label i { margin-right: .35rem; color: #1a73e8; }
+
+    .form-input {
+      width: 100%; padding: .65rem .9rem;
+      border: 1.5px solid #e2e8f0; border-radius: 10px;
+      font-size: .9rem; color: #1e293b;
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: #f8fafc; outline: none;
+      transition: border-color .15s, background .15s;
+      box-sizing: border-box;
+    }
+    .form-input:focus { border-color: #1a73e8; background: #fff; }
+    .form-input::placeholder { color: #94a3b8; }
+
+    .auth-btn {
+      width: 100%; padding: .75rem;
+      background: linear-gradient(135deg, #1a73e8, #0d9488);
+      color: #fff; border: none; border-radius: 10px;
+      font-size: .95rem; font-weight: 700;
+      cursor: pointer; margin-top: .5rem;
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      display: flex; align-items: center; justify-content: center; gap: .5rem;
+      transition: opacity .15s, transform .15s;
+    }
+    .auth-btn:hover:not(:disabled) { opacity: .92; transform: translateY(-1px); }
+    .auth-btn:disabled { opacity: .5; cursor: not-allowed; }
+
+    /* Code display box */
+    .code-reveal {
+      display: none;
+      background: linear-gradient(135deg, #f0fdf4, #e0f2fe);
+      border: 1.5px solid #a7f3d0;
+      border-radius: 12px; padding: 1.5rem;
+      text-align: center; margin-top: 1rem;
+      animation: auth-in .3s ease;
+    }
+    .code-reveal.visible { display: block; }
+    .code-reveal h3 {
+      font-size: .9rem; color: #065f46;
+      font-weight: 700; margin-bottom: .5rem;
+      font-family: 'Segoe UI', system-ui, sans-serif;
+    }
+    .code-number {
+      font-size: 2.8rem; font-weight: 900;
+      color: #1a73e8; letter-spacing: .2em;
+      font-family: 'Courier New', monospace;
+      margin: .5rem 0;
+    }
+    .code-reveal p {
+      font-size: .78rem; color: #374151;
+      line-height: 1.6;
+      font-family: 'Segoe UI', system-ui, sans-serif;
+    }
+    .code-reveal p strong { color: #dc2626; }
+    .code-goto-btn {
+      display: inline-flex; align-items: center; gap: .4rem;
+      margin-top: 1rem; padding: .6rem 1.4rem;
+      background: linear-gradient(135deg, #1a73e8, #0d9488);
+      color: #fff; border: none; border-radius: 8px;
+      font-size: .85rem; font-weight: 700;
+      cursor: pointer; font-family: 'Segoe UI', system-ui, sans-serif;
+      transition: opacity .15s;
+    }
+    .code-goto-btn:hover { opacity: .9; }
+
+    /* Error / info messages */
+    .auth-msg {
+      padding: .6rem .85rem; border-radius: 8px;
+      font-size: .8rem; margin-bottom: .9rem;
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      display: none; align-items: center; gap: .4rem;
+    }
+    .auth-msg.visible { display: flex; }
+    .auth-msg.error { background: #fef2f2; color: #dc2626; border: 1px solid #fecaca; }
+    .auth-msg.success { background: #f0fdf4; color: #16a34a; border: 1px solid #a7f3d0; }
+
+    .auth-note {
+      font-size: .75rem; color: #64748b; text-align: center;
+      margin-top: 1rem; line-height: 1.6;
+      font-family: 'Segoe UI', system-ui, sans-serif;
+    }
+
+    /* Loading spinner */
+    .spinner {
+      width: 18px; height: 18px; border-radius: 50%;
+      border: 2px solid rgba(255,255,255,.4);
+      border-top-color: #fff;
+      animation: spin .7s linear infinite; display: none;
+    }
+    .spinner.visible { display: inline-block; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+  </style>
+</head>
+<body>
+
+  <nav class="navbar">
+    <div class="logo"><i class="fas fa-graduation-cap"></i> Vasco Learning</div>
+  </nav>
+
+  <div class="auth-wrapper">
+    <div class="auth-card">
+
+      <div class="auth-header">
+        <div class="auth-logo"><i class="fas fa-graduation-cap"></i></div>
+        <h1>Vasco AI Learning</h1>
+        <p>Your progress is saved and follows you everywhere</p>
+      </div>
+
+      <div class="auth-tabs">
+        <button class="auth-tab active" onclick="showTab('register')" id="tab-register">
+          <i class="fas fa-user-plus"></i> New Student
+        </button>
+        <button class="auth-tab" onclick="showTab('login')" id="tab-login">
+          <i class="fas fa-sign-in-alt"></i> Returning Student
+        </button>
+      </div>
+
+      <div class="auth-body">
+
+        <!-- REGISTER PANEL -->
+        <div class="auth-panel active" id="panel-register">
+          <div class="auth-msg error" id="reg-error">
+            <i class="fas fa-circle-exclamation"></i>
+            <span id="reg-error-text"></span>
+          </div>
+
+          <div class="form-group">
+            <label><i class="fas fa-user"></i> Full Name</label>
+            <input type="text" id="reg-name" class="form-input"
+              placeholder="Enter your full name" autocomplete="name"/>
+          </div>
+
+          <div class="form-group">
+            <label><i class="fas fa-envelope"></i> Email Address</label>
+            <input type="email" id="reg-email" class="form-input"
+              placeholder="Enter your email address" autocomplete="email"/>
+          </div>
+
+          <button class="auth-btn" id="reg-btn" onclick="registerUser()">
+            <span id="reg-btn-text"><i class="fas fa-wand-magic-sparkles"></i> Create My Account</span>
+            <span class="spinner" id="reg-spinner"></span>
+          </button>
+
+          <!-- Code reveal box -->
+          <div class="code-reveal" id="code-reveal">
+            <h3><i class="fas fa-key"></i> Your Personal Login Code</h3>
+            <div class="code-number" id="code-display"></div>
+            <p>
+              <strong>Write this code down now.</strong><br/>
+              You will need it every time you log in.<br/>
+              This is the only time it will be shown.
+            </p>
+            <button class="code-goto-btn" onclick="goToPlatform()">
+              <i class="fas fa-arrow-right"></i> Start Learning
+            </button>
+          </div>
+
+          <p class="auth-note">Already have a code? Switch to <strong>Returning Student</strong> above.</p>
+        </div>
+
+        <!-- LOGIN PANEL -->
+        <div class="auth-panel" id="panel-login">
+          <div class="auth-msg error" id="login-error">
+            <i class="fas fa-circle-exclamation"></i>
+            <span id="login-error-text"></span>
+          </div>
+          <div class="auth-msg success" id="login-success">
+            <i class="fas fa-check-circle"></i>
+            <span id="login-success-text"></span>
+          </div>
+
+          <div class="form-group">
+            <label><i class="fas fa-envelope"></i> Email Address</label>
+            <input type="email" id="login-email" class="form-input"
+              placeholder="Enter your email address" autocomplete="email"/>
+          </div>
+
+          <div class="form-group">
+            <label><i class="fas fa-key"></i> Your 6-Digit Code</label>
+            <input type="text" id="login-code" class="form-input"
+              placeholder="Enter your 6-digit code"
+              maxlength="6" inputmode="numeric"
+              onkeydown="if(event.key==='Enter') loginUser()"/>
+          </div>
+
+          <button class="auth-btn" id="login-btn" onclick="loginUser()">
+            <span id="login-btn-text"><i class="fas fa-sign-in-alt"></i> Log In</span>
+            <span class="spinner" id="login-spinner"></span>
+          </button>
+
+          <p class="auth-note">New here? Switch to <strong>New Student</strong> above to create an account.</p>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Firebase SDKs -->
+  <script type="module">
+    import { initializeApp }          from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import { getFirestore, doc, setDoc, getDoc, updateDoc }
+      from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey           : "AIzaSyBpToJyYHbcbfWR6hT6HBRo6Sj8iQQgPQA",
+      authDomain       : "vasco-platform.firebaseapp.com",
+      projectId        : "vasco-platform",
+      storageBucket    : "vasco-platform.firebasestorage.app",
+      messagingSenderId: "995549874685",
+      appId            : "1:995549874685:web:0747c6f0af5323f448f194"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db  = getFirestore(app);
+
+    /* ── Helpers ─────────────────────────────────── */
+    function generate6DigitCode() {
+      return String(Math.floor(100000 + Math.random() * 900000));
+    }
+
+    function setLoading(type, on) {
+      const btn     = document.getElementById(type + '-btn');
+      const txt     = document.getElementById(type + '-btn-text');
+      const spinner = document.getElementById(type + '-spinner');
+      btn.disabled        = on;
+      txt.style.display   = on ? 'none'         : 'flex';
+      spinner.className   = on ? 'spinner visible' : 'spinner';
+    }
+
+    function showError(type, msg) {
+      const el   = document.getElementById(type + '-error');
+      const span = document.getElementById(type + '-error-text');
+      span.textContent = msg;
+      el.classList.add('visible');
+    }
+
+    function hideError(type) {
+      document.getElementById(type + '-error').classList.remove('visible');
+    }
+
+    function showSuccess(type, msg) {
+      const el   = document.getElementById(type + '-success');
+      const span = document.getElementById(type + '-success-text');
+      span.textContent = msg;
+      el.classList.add('visible');
+    }
+
+    /* ── Tab switching ───────────────────────────── */
+    window.showTab = function(tab) {
+      document.querySelectorAll('.auth-panel').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
+      document.getElementById('panel-' + tab).classList.add('active');
+      document.getElementById('tab-' + tab).classList.add('active');
+    };
+
+    /* ── Register ────────────────────────────────── */
+    window.registerUser = async function() {
+      hideError('reg');
+      const name  = document.getElementById('reg-name').value.trim();
+      const email = document.getElementById('reg-email').value.trim().toLowerCase();
+
+      if (!name)  { showError('reg', 'Please enter your full name.');          return; }
+      if (!email) { showError('reg', 'Please enter your email address.');      return; }
+      if (!email.includes('@')) { showError('reg', 'Please enter a valid email.'); return; }
+
+      setLoading('reg', true);
+
+      try {
+        // Check if email already registered
+        const existing = await getDoc(doc(db, 'users', email));
+        if (existing.exists()) {
+          showError('reg', 'This email is already registered. Please log in instead.');
+          setLoading('reg', false);
+          return;
+        }
+
+        const code = generate6DigitCode();
+        const userData = {
+          name      : name,
+          email     : email,
+          code      : code,
+          createdAt : new Date().toISOString(),
+          progress  : {},
+          tests     : {},
+        };
+
+        await setDoc(doc(db, 'users', email), userData);
+
+        // Save session
+        sessionStorage.setItem('vasco_user', JSON.stringify({ name, email, code }));
+
+        // Show code
+        document.getElementById('code-display').textContent = code;
+        document.getElementById('code-reveal').classList.add('visible');
+        document.getElementById('reg-btn').style.display = 'none';
+
+      } catch (err) {
+        showError('reg', 'Something went wrong. Please check your connection and try again.');
+        console.error(err);
+      }
+
+      setLoading('reg', false);
+    };
+
+    /* ── Go to platform ──────────────────────────── */
+    window.goToPlatform = function() {
+      window.location.href = 'index.html';
+    };
+
+    /* ── Login ───────────────────────────────────── */
+    window.loginUser = async function() {
+      hideError('login');
+      document.getElementById('login-success').classList.remove('visible');
+
+      const email = document.getElementById('login-email').value.trim().toLowerCase();
+      const code  = document.getElementById('login-code').value.trim();
+
+      if (!email) { showError('login', 'Please enter your email address.'); return; }
+      if (!code)  { showError('login', 'Please enter your 6-digit code.');  return; }
+      if (code.length !== 6) { showError('login', 'Your code must be exactly 6 digits.'); return; }
+
+      setLoading('login', true);
+
+      try {
+        const snap = await getDoc(doc(db, 'users', email));
+
+        if (!snap.exists()) {
+          showError('login', 'No account found with this email. Please register first.');
+          setLoading('login', false);
+          return;
+        }
+
+        const user = snap.data();
+
+        if (user.code !== code) {
+          showError('login', 'Incorrect code. Please check and try again.');
+          setLoading('login', false);
+          return;
+        }
+
+        // Save session
+        sessionStorage.setItem('vasco_user', JSON.stringify({
+          name  : user.name,
+          email : user.email,
+          code  : user.code,
+        }));
+
+        showSuccess('login', `Welcome back, ${user.name}! Redirecting…`);
+        setTimeout(() => { window.location.href = 'index.html'; }, 1200);
+
+      } catch (err) {
+        showError('login', 'Something went wrong. Please check your connection and try again.');
+        console.error(err);
+      }
+
+      setLoading('login', false);
+    };
+
+    /* ── Auto-redirect if already logged in ─────── */
+    const session = sessionStorage.getItem('vasco_user');
+    if (session) {
+      window.location.href = 'index.html';
+    }
+
+  </script>
+</body>
+</html>

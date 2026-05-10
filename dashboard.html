@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dashboard — Vasco AI Learning Platform</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <style>
+
+    /* ── Dashboard Variables ───────────────────────────────── */
+    :root {
+      --db-bg        : #f0f4f8;
+      --db-card      : #ffffff;
+      --db-border    : #e2e8f0;
+      --db-blue      : #1a73e8;
+      --db-green     : #0d9488;
+      --db-orange    : #f59e0b;
+      --db-purple    : #7c3aed;
+      --db-red       : #ef4444;
+      --db-text      : #1e293b;
+      --db-muted     : #64748b;
+      --db-radius    : 14px;
+      --db-shadow    : 0 2px 12px rgba(0,0,0,0.07);
+      --db-shadow-lg : 0 6px 28px rgba(0,0,0,0.11);
+    }
+
+    /* ── Page base ─────────────────────────────────────────── */
+    body { background: var(--db-bg); }
+
+    .db-wrapper {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 2rem 1.25rem 4rem;
+    }
+
+    /* ── Page header ───────────────────────────────────────── */
+    .db-page-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    .db-page-header h1 {
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: var(--db-text);
+      display: flex;
+      align-items: center;
+      gap: .6rem;
+    }
+    .db-page-header h1 i { color: var(--db-blue); font-size: 1.4rem; }
+    .db-page-header p   { color: var(--db-muted); font-size: .9rem; margin-top: .2rem; }
+
+    /* ── Stats row ─────────────────────────────────────────── */
+    .db-stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    .db-stat-card {
+      background: var(--db-card);
+      border-radius: var(--db-radius);
+      padding: 1.25rem 1.4rem;
+      box-shadow: var(--db-shadow);
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      border: 1px solid var(--db-border);
+      animation: db-fade-up .35s ease both;
+    }
+    .db-stat-card:nth-child(1) { animation-delay: .05s; }
+    .db-stat-card:nth-child(2) { animation-delay: .10s; }
+    .db-stat-card:nth-child(3) { animation-delay: .15s; }
+    .db-stat-card:nth-child(4) { animation-delay: .20s; }
+
+    .db-stat-icon {
+      width: 46px; height: 46px; border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.2rem; flex-shrink: 0;
+    }
+    .db-stat-icon.blue   { background: #eff6ff; color: var(--db-blue); }
+    .db-stat-icon.green  { background: #f0fdf4; color: var(--db-green); }
+    .db-stat-icon.orange { background: #fffbeb; color: var(--db-orange); }
+    .db-stat-icon.purple { background: #f5f3ff; color: var(--db-purple); }
+
+    .db-stat-info strong {
+      display: block;
+      font-size: 1.55rem;
+      font-weight: 800;
+      color: var(--db-text);
+      line-height: 1.1;
+    }
+    .db-stat-info span {
+      font-size: .75rem;
+      color: var(--db-muted);
+      font-weight: 500;
+    }
+
+    /* ── Section titles ────────────────────────────────────── */
+    .db-section-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--db-text);
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: .5rem;
+    }
+    .db-section-title i { color: var(--db-blue); }
+
+    /* ── Course progress cards ─────────────────────────────── */
+    .db-courses-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+      gap: 1.1rem;
+      margin-bottom: 2.5rem;
+    }
+
+    .db-course-card {
+      background: var(--db-card);
+      border-radius: var(--db-radius);
+      border: 1px solid var(--db-border);
+      box-shadow: var(--db-shadow);
+      padding: 1.35rem;
+      display: flex;
+      flex-direction: column;
+      gap: .9rem;
+      animation: db-fade-up .4s ease both;
+      transition: box-shadow .2s, transform .2s;
+    }
+    .db-course-card:hover {
+      box-shadow: var(--db-shadow-lg);
+      transform: translateY(-2px);
+    }
+
+    .db-course-top {
+      display: flex;
+      align-items: center;
+      gap: .85rem;
+    }
+    .db-course-icon {
+      width: 44px; height: 44px; border-radius: 11px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.15rem; flex-shrink: 0;
+    }
+    .db-course-icon.blue   { background: #eff6ff; color: var(--db-blue); }
+    .db-course-icon.green  { background: #f0fdf4; color: var(--db-green); }
+    .db-course-icon.purple { background: #f5f3ff; color: var(--db-purple); }
+    .db-course-icon.orange { background: #fffbeb; color: var(--db-orange); }
+
+    .db-course-info h3 {
+      font-size: .92rem;
+      font-weight: 700;
+      color: var(--db-text);
+      line-height: 1.3;
+    }
+    .db-course-info span {
+      font-size: .72rem;
+      color: var(--db-muted);
+    }
+
+    /* Level progress bars */
+    .db-level-bars { display: flex; flex-direction: column; gap: .55rem; }
+    .db-level-row  { display: flex; flex-direction: column; gap: .22rem; }
+    .db-level-meta {
+      display: flex;
+      justify-content: space-between;
+      font-size: .72rem;
+      color: var(--db-muted);
+      font-weight: 500;
+    }
+    .db-level-meta .db-level-name {
+      display: flex; align-items: center; gap: .3rem;
+    }
+    .db-bar-track {
+      height: 7px;
+      background: #e2e8f0;
+      border-radius: 99px;
+      overflow: hidden;
+    }
+    .db-bar-fill {
+      height: 100%;
+      border-radius: 99px;
+      background: linear-gradient(90deg, var(--db-blue), var(--db-green));
+      transition: width .8s cubic-bezier(.4,0,.2,1);
+      width: 0%;
+    }
+    .db-bar-fill.complete { background: linear-gradient(90deg, #10b981, #059669); }
+
+    .db-course-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-top: .5rem;
+      border-top: 1px solid var(--db-border);
+    }
+    .db-total-pct {
+      font-size: .8rem;
+      font-weight: 700;
+      color: var(--db-blue);
+    }
+    .db-btn-resume {
+      background: linear-gradient(135deg, var(--db-blue), var(--db-green));
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: .42rem .9rem;
+      font-size: .78rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex; align-items: center; gap: .4rem;
+      transition: opacity .15s, transform .15s;
+      text-decoration: none;
+    }
+    .db-btn-resume:hover { opacity: .9; transform: scale(1.03); }
+
+    /* ── Certificates section ──────────────────────────────── */
+    .db-certs-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2.5rem;
+    }
+
+    .db-cert-card {
+      background: var(--db-card);
+      border: 1px solid var(--db-border);
+      border-radius: var(--db-radius);
+      box-shadow: var(--db-shadow);
+      padding: 1.25rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      animation: db-fade-up .45s ease both;
+      transition: box-shadow .2s;
+    }
+    .db-cert-card:hover { box-shadow: var(--db-shadow-lg); }
+
+    .db-cert-icon {
+      width: 50px; height: 50px; border-radius: 50%;
+      background: linear-gradient(135deg, #f59e0b, #d97706);
+      display: flex; align-items: center; justify-content: center;
+      color: #fff; font-size: 1.3rem; flex-shrink: 0;
+    }
+    .db-cert-info h4 {
+      font-size: .88rem;
+      font-weight: 700;
+      color: var(--db-text);
+      margin-bottom: .15rem;
+    }
+    .db-cert-info p {
+      font-size: .72rem;
+      color: var(--db-muted);
+      margin-bottom: .45rem;
+    }
+    .db-cert-actions { display: flex; gap: .4rem; }
+    .db-cert-btn {
+      font-size: .7rem;
+      padding: .28rem .65rem;
+      border-radius: 6px;
+      border: none;
+      cursor: pointer;
+      font-weight: 600;
+      display: flex; align-items: center; gap: .3rem;
+      transition: opacity .15s;
+    }
+    .db-cert-btn:hover { opacity: .82; }
+    .db-cert-btn.primary { background: var(--db-blue); color: #fff; }
+    .db-cert-btn.outline { background: #f1f5f9; color: var(--db-text); border: 1px solid var(--db-border); }
+
+    /* ── Empty state ───────────────────────────────────────── */
+    .db-empty {
+      background: var(--db-card);
+      border: 1px dashed var(--db-border);
+      border-radius: var(--db-radius);
+      padding: 2.5rem 1.5rem;
+      text-align: center;
+      color: var(--db-muted);
+    }
+    .db-empty i { font-size: 2.2rem; margin-bottom: .75rem; opacity: .35; display: block; }
+    .db-empty p { font-size: .88rem; }
+    .db-empty a {
+      display: inline-flex; align-items: center; gap: .4rem;
+      margin-top: .85rem;
+      background: linear-gradient(135deg, var(--db-blue), var(--db-green));
+      color: #fff; padding: .5rem 1.1rem; border-radius: 8px;
+      font-size: .82rem; font-weight: 600; text-decoration: none;
+      transition: opacity .15s;
+    }
+    .db-empty a:hover { opacity: .88; }
+
+    /* ── Recent activity ───────────────────────────────────── */
+    .db-activity-list {
+      background: var(--db-card);
+      border: 1px solid var(--db-border);
+      border-radius: var(--db-radius);
+      box-shadow: var(--db-shadow);
+      overflow: hidden;
+    }
+    .db-activity-item {
+      display: flex;
+      align-items: center;
+      gap: .85rem;
+      padding: .9rem 1.2rem;
+      border-bottom: 1px solid var(--db-border);
+      animation: db-fade-up .4s ease both;
+      font-size: .85rem;
+    }
+    .db-activity-item:last-child { border-bottom: none; }
+    .db-activity-dot {
+      width: 9px; height: 9px; border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .db-activity-dot.green  { background: #10b981; }
+    .db-activity-dot.blue   { background: var(--db-blue); }
+    .db-activity-dot.orange { background: var(--db-orange); }
+    .db-activity-text { flex: 1; color: var(--db-text); }
+    .db-activity-text span { color: var(--db-muted); font-size: .75rem; display: block; }
+    .db-activity-badge {
+      font-size: .68rem; font-weight: 700; padding: .2rem .55rem;
+      border-radius: 20px; flex-shrink: 0;
+    }
+    .db-activity-badge.green  { background: #dcfce7; color: #16a34a; }
+    .db-activity-badge.blue   { background: #eff6ff; color: var(--db-blue); }
+    .db-activity-badge.orange { background: #fffbeb; color: #b45309; }
+
+    /* ── Animation ─────────────────────────────────────────── */
+    @keyframes db-fade-up {
+      from { opacity: 0; transform: translateY(14px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── Responsive ────────────────────────────────────────── */
+    @media (max-width: 600px) {
+      .db-page-header { flex-direction: column; align-items: flex-start; }
+      .db-stats { grid-template-columns: 1fr 1fr; }
+    }
+
+  </style>
+</head>
+<body>
+
+  <!-- NAVIGATION -->
+  <nav class="navbar">
+    <div class="logo"><i class="fas fa-graduation-cap"></i> Vasco Learning</div>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="dashboard.html" class="active">Dashboard</a></li>
+    </ul>
+  </nav>
+
+  <div class="db-wrapper">
+
+    <!-- Page Header -->
+    <div class="db-page-header">
+      <div>
+        <h1><i class="fas fa-chart-pie"></i> My Dashboard</h1>
+        <p>Track your progress, lessons completed and certificates earned.</p>
+      </div>
+      <a href="index.html" class="db-btn-resume">
+        <i class="fas fa-plus"></i> Start a Course
+      </a>
+    </div>
+
+    <!-- Stats Row -->
+    <div class="db-stats" id="db-stats">
+      <div class="db-stat-card">
+        <div class="db-stat-icon blue"><i class="fas fa-book-open"></i></div>
+        <div class="db-stat-info">
+          <strong id="stat-courses">0</strong>
+          <span>Courses Started</span>
+        </div>
+      </div>
+      <div class="db-stat-card">
+        <div class="db-stat-icon green"><i class="fas fa-check-circle"></i></div>
+        <div class="db-stat-info">
+          <strong id="stat-lessons">0</strong>
+          <span>Lessons Completed</span>
+        </div>
+      </div>
+      <div class="db-stat-card">
+        <div class="db-stat-icon orange"><i class="fas fa-certificate"></i></div>
+        <div class="db-stat-info">
+          <strong id="stat-certs">0</strong>
+          <span>Certificates Earned</span>
+        </div>
+      </div>
+      <div class="db-stat-card">
+        <div class="db-stat-icon purple"><i class="fas fa-percent"></i></div>
+        <div class="db-stat-info">
+          <strong id="stat-overall">0%</strong>
+          <span>Overall Progress</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Course Progress -->
+    <div class="db-section-title">
+      <i class="fas fa-layer-group"></i> Course Progress
+    </div>
+    <div class="db-courses-grid" id="db-courses-grid">
+      <!-- filled by JS -->
+    </div>
+
+    <!-- Certificates -->
+    <div class="db-section-title">
+      <i class="fas fa-certificate"></i> Certificates Earned
+    </div>
+    <div id="db-certs-area">
+      <!-- filled by JS -->
+    </div>
+
+    <!-- Recent Activity -->
+    <div class="db-section-title" style="margin-top:2rem;">
+      <i class="fas fa-clock-rotate-left"></i> Recent Activity
+    </div>
+    <div id="db-activity-area">
+      <!-- filled by JS -->
+    </div>
+
+  </div><!-- /.db-wrapper -->
+
+  <footer class="footer">
+    <p>© 2025 Vasco AI Learning Platform. All rights reserved.</p>
+    <p>Need help? <a href="https://wa.me/231777339716" target="_blank"><i class="fab fa-whatsapp"></i> Contact us on WhatsApp</a></p>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="js/data.js"></script>
+  <script src="js/progress.js"></script>
+  <script>
+
+    /* ── Course meta (colours + icons match index.html) ──── */
+    const COURSE_META = {
+      'small-business' : { color: 'blue',   icon: 'fas fa-store',       label: 'Starting a Small Business'         },
+      'digital-skills' : { color: 'green',  icon: 'fas fa-laptop-code', label: 'Digital Skills & Productivity'     },
+      'communication'  : { color: 'purple', icon: 'fas fa-comments',    label: 'Communication & Influence Skills'  },
+      'digital-income' : { color: 'orange', icon: 'fas fa-coins',       label: 'Digital Income & Opportunity Skills'},
+    };
+
+    const LEVELS = ['beginner', 'intermediate', 'advanced'];
+    const LEVEL_ICONS = {
+      beginner     : 'fas fa-seedling',
+      intermediate : 'fas fa-chart-line',
+      advanced     : 'fas fa-trophy',
+    };
+
+    /* ── Helpers ─────────────────────────────────────────── */
+    function totalLessonsInCourse(courseId) {
+      const course = courses.find(c => c.id === courseId);
+      if (!course) return 0;
+      return LEVELS.reduce((sum, lvl) => {
+        return sum + (course.levels[lvl]?.lessons?.length || 0);
+      }, 0);
+    }
+
+    function completedLessonsInCourse(courseId) {
+      const course = courses.find(c => c.id === courseId);
+      if (!course) return 0;
+      return LEVELS.reduce((sum, lvl) => {
+        const lessons = course.levels[lvl]?.lessons || [];
+        return sum + lessons.filter(l => isLessonCompleted(courseId, lvl, l.id)).length;
+      }, 0);
+    }
+
+    function levelPct(courseId, level) {
+      return getLevelProgress ? getLevelProgress(courseId, level) : 0;
+    }
+
+    function hasCertificate(courseId) {
+      // A certificate is earned when all 3 levels reach 100%
+      return LEVELS.every(lvl => levelPct(courseId, lvl) === 100);
+    }
+
+    /* ── Build stats row ────────────────────────────────── */
+    function buildStats() {
+      let coursesStarted = 0, totalDone = 0, totalAll = 0, certs = 0;
+
+      courses.forEach(c => {
+        const done = completedLessonsInCourse(c.id);
+        const all  = totalLessonsInCourse(c.id);
+        if (done > 0) coursesStarted++;
+        totalDone += done;
+        totalAll  += all;
+        if (hasCertificate(c.id)) certs++;
+      });
+
+      document.getElementById('stat-courses').textContent = coursesStarted;
+      document.getElementById('stat-lessons').textContent = totalDone;
+      document.getElementById('stat-certs').textContent   = certs;
+      document.getElementById('stat-overall').textContent =
+        totalAll > 0 ? Math.round((totalDone / totalAll) * 100) + '%' : '0%';
+    }
+
+    /* ── Build course cards ─────────────────────────────── */
+    function buildCourseCards() {
+      const grid = document.getElementById('db-courses-grid');
+      grid.innerHTML = '';
+
+      const started = courses.filter(c => completedLessonsInCourse(c.id) > 0);
+
+      if (started.length === 0) {
+        grid.innerHTML = `
+          <div class="db-empty" style="grid-column:1/-1">
+            <i class="fas fa-book-open"></i>
+            <p>You have not started any courses yet.</p>
+            <a href="index.html"><i class="fas fa-arrow-right"></i> Browse Courses</a>
+          </div>`;
+        return;
+      }
+
+      started.forEach((course, i) => {
+        const meta     = COURSE_META[course.id] || { color:'blue', icon:'fas fa-book', label: course.title };
+        const totalPct = totalLessonsInCourse(course.id) > 0
+          ? Math.round((completedLessonsInCourse(course.id) / totalLessonsInCourse(course.id)) * 100)
+          : 0;
+
+        const levelsHTML = LEVELS.map(lvl => {
+          const pct = levelPct(course.id, lvl);
+          return `
+            <div class="db-level-row">
+              <div class="db-level-meta">
+                <span class="db-level-name">
+                  <i class="${LEVEL_ICONS[lvl]}"></i>
+                  ${lvl.charAt(0).toUpperCase() + lvl.slice(1)}
+                </span>
+                <span>${pct}%</span>
+              </div>
+              <div class="db-bar-track">
+                <div class="db-bar-fill ${pct === 100 ? 'complete' : ''}"
+                  style="width:${pct}%"></div>
+              </div>
+            </div>`;
+        }).join('');
+
+        const card = document.createElement('div');
+        card.className = 'db-course-card';
+        card.style.animationDelay = (i * 0.08) + 's';
+        card.innerHTML = `
+          <div class="db-course-top">
+            <div class="db-course-icon ${meta.color}"><i class="${meta.icon}"></i></div>
+            <div class="db-course-info">
+              <h3>${meta.label}</h3>
+              <span>${completedLessonsInCourse(course.id)} of ${totalLessonsInCourse(course.id)} lessons done</span>
+            </div>
+          </div>
+          <div class="db-level-bars">${levelsHTML}</div>
+          <div class="db-course-footer">
+            <span class="db-total-pct">${totalPct}% complete</span>
+            <a href="index.html" class="db-btn-resume" onclick="sessionStorage.setItem('resumeCourse','${course.id}')">
+              <i class="fas fa-play"></i> Resume
+            </a>
+          </div>`;
+        grid.appendChild(card);
+      });
+    }
+
+    /* ── Build certificates ─────────────────────────────── */
+    function buildCerts() {
+      const area = document.getElementById('db-certs-area');
+      const earned = courses.filter(c => hasCertificate(c.id));
+
+      if (earned.length === 0) {
+        area.innerHTML = `
+          <div class="db-empty">
+            <i class="fas fa-certificate"></i>
+            <p>Complete all levels of a course to earn your certificate.</p>
+          </div>`;
+        return;
+      }
+
+      const grid = document.createElement('div');
+      grid.className = 'db-certs-grid';
+
+      earned.forEach((course, i) => {
+        const meta = COURSE_META[course.id] || { label: course.title };
+        const card = document.createElement('div');
+        card.className = 'db-cert-card';
+        card.style.animationDelay = (i * 0.08) + 's';
+        card.innerHTML = `
+          <div class="db-cert-icon"><i class="fas fa-certificate"></i></div>
+          <div class="db-cert-info">
+            <h4>${meta.label}</h4>
+            <p>All levels completed</p>
+            <div class="db-cert-actions">
+              <button class="db-cert-btn primary"
+                onclick="alert('Certificate download will be available after payment. Contact us on WhatsApp.')">
+                <i class="fas fa-download"></i> Download
+              </button>
+              <a href="https://wa.me/231777339716?text=I completed ${encodeURIComponent(meta.label)} and want my certificate"
+                target="_blank" class="db-cert-btn outline">
+                <i class="fab fa-whatsapp"></i> Claim
+              </a>
+            </div>
+          </div>`;
+        grid.appendChild(card);
+      });
+
+      area.appendChild(grid);
+    }
+
+    /* ── Build recent activity ──────────────────────────── */
+    function buildActivity() {
+      const area = document.getElementById('db-activity-area');
+      const items = [];
+
+      courses.forEach(course => {
+        const meta = COURSE_META[course.id] || { label: course.title };
+        LEVELS.forEach(lvl => {
+          const lessons = course.levels[lvl]?.lessons || [];
+          lessons.forEach(l => {
+            if (isLessonCompleted(course.id, lvl, l.id)) {
+              items.push({
+                text  : `Completed <strong>${l.title}</strong>`,
+                sub   : `${meta.label} — ${lvl.charAt(0).toUpperCase() + lvl.slice(1)}`,
+                dot   : 'green',
+                badge : { text: 'Completed', cls: 'green' },
+              });
+            }
+          });
+        });
+      });
+
+      if (items.length === 0) {
+        area.innerHTML = `
+          <div class="db-empty">
+            <i class="fas fa-clock-rotate-left"></i>
+            <p>No activity yet. Complete your first lesson to see it here.</p>
+          </div>`;
+        return;
+      }
+
+      // Show last 8
+      const recent = items.slice(-8).reverse();
+      const list = document.createElement('div');
+      list.className = 'db-activity-list';
+      recent.forEach((item, i) => {
+        const row = document.createElement('div');
+        row.className = 'db-activity-item';
+        row.style.animationDelay = (i * 0.05) + 's';
+        row.innerHTML = `
+          <div class="db-activity-dot ${item.dot}"></div>
+          <div class="db-activity-text">
+            ${item.text}
+            <span>${item.sub}</span>
+          </div>
+          <span class="db-activity-badge ${item.badge.cls}">${item.badge.text}</span>`;
+        list.appendChild(row);
+      });
+      area.appendChild(list);
+    }
+
+    /* ── Resume course shortcut ─────────────────────────── */
+    function checkResume() {
+      const id = sessionStorage.getItem('resumeCourse');
+      if (id) {
+        sessionStorage.removeItem('resumeCourse');
+        // index.html handles openCourse — nothing to do on dashboard
+      }
+    }
+
+    /* ── Init ───────────────────────────────────────────── */
+    document.addEventListener('DOMContentLoaded', function () {
+      buildStats();
+      buildCourseCards();
+      buildCerts();
+      buildActivity();
+      checkResume();
+    });
+
+  </script>
+</body>
+</html>
